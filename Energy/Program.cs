@@ -16,8 +16,11 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddSingleton<WeatherForecastService>();
     builder.Services.AddSingleton<OverviewService>();
 
-    builder.Services.AddRefitClient<IAPI>()
+    builder.Services.AddRefitClient<IEnergyApi>()
                           .ConfigureHttpClient(c => c.BaseAddress = new Uri(builder.Configuration.GetConnectionString("APIEnergyCharts") ?? ""));
+
+    builder.Services.AddRefitClient<IWeatherApi>()
+                          .ConfigureHttpClient(c => c.BaseAddress = new Uri(builder.Configuration.GetConnectionString("APIWeatherForecast") ?? ""));
 }
 var app = builder.Build();
 

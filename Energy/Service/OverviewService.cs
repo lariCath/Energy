@@ -2,9 +2,9 @@
 
 public class OverviewService
 {
-    private readonly IAPI dataAPI;
+    private readonly IEnergyApi dataAPI;
 
-    public OverviewService(IAPI dataAPI)
+    public OverviewService(IEnergyApi dataAPI)
     {
         this.dataAPI = dataAPI;
     }
@@ -19,8 +19,8 @@ public class OverviewService
             var start = startTime.ToString("yyyy-MM-dd HH:mm");
             var end = endTime.ToString("yyyy-MM-dd HH:mm");
 
-            var a = new QueryParams("de", start, end);
-            var rawData = await dataAPI.GetData(a);
+            var queryparams = new QueryParams("de", start, end);
+            var rawData = await dataAPI.GetData(queryparams);
 
             var result = new List<EnergyData2>();
             var lists = rawData.Content;
