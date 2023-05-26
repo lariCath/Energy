@@ -70,7 +70,7 @@ public class OverviewService
         }
     }
 
-    public List<EnergyData2> GetEnergyData2(List<EnergyData3> rawdata)
+    private static List<EnergyData2> GetEnergyData2(List<EnergyData3> rawdata)
     {
         var res = new List<EnergyData2>();
 
@@ -81,6 +81,29 @@ public class OverviewService
         }
 
         return res;
+    }
+
+    public async Task<List<EnergyData2>?> GetTrafficLight()
+    {
+        try
+        {
+            var rawdata = (await dataAPI.GetTrafficSignal("de")).Content!;
+
+            var res = new List<EnergyData2>();
+
+            for (int i = 0; i < rawdata[0].Unixstamps.Count; i++)
+            {
+                var a = new EnergyData2(rawdata[0].Unixstamps[i], rawdata[0].Data[i]);
+                res.Add(a);
+            }
+
+            return res;
+        }
+        catch(Exception ex)
+        {
+            Log.Error(ex, "Something went wrong!");
+            return null;
+        }
     }
 
     public async Task<List<WeatherData2>?> GetWeather()
