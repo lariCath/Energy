@@ -13,13 +13,10 @@
             <RadzenDataGridColumn TItem="EnergyData2" Property="RenewableShare" Title="Data" Width="120px" />
         </Columns>
     </RadzenDataGrid>
-    <br />
 
-    <div class="rz-p-sm-12 rz-text-align-center">
-        <RadzenDropDown Data="@(Enum.GetValues(typeof(Appliance)).Cast<Enum>())" @bind-Value=@appliance AllowClear=true Placeholder="Select appliance" Style="width: 100%; max-width: 400px;" />
-    </div>
-}
-    
+    <RadzenDropDown Data=@dropdown TextProperty="Name" ValueProperty="Id" AllowClear=true Placeholder="Select location" @bind-Value="@value" />
+   
+
     <RadzenDataGrid PageSize="20" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true" AllowPaging="true" AllowSorting="true" Data="@weather" TItem="WeatherData2" ColumnWidth="800px">
         <Columns>
             <RadzenDataGridColumn TItem="WeatherData2" Property="time" Title="Timestamp" Width="70px" />

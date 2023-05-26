@@ -1,4 +1,3 @@
-using Energy.Data;
 using Energy.Service;
 using Refit;
 using Serilog;
