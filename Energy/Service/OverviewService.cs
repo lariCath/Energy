@@ -13,7 +13,13 @@ public class OverviewService
     {
         try
         {
-            var a = new QueryParams(new DateTime(2023, 05, 25, 17, 0, 0), new DateTime(2023, 05, 25, 18, 0, 0), "de");
+            DateTime startTime = new DateTime(2023, 05, 25, 17, 0, 0);
+            DateTime endTime = new DateTime(2023, 05, 25, 18, 0, 0);
+
+            var start = startTime.ToString("yyyy-MM-dd HH:mm");
+            var end = endTime.ToString("yyyy-MM-dd HH:mm");
+
+            var a = new QueryParams("de", start, end);
             var rawData = await dataAPI.GetData(a);
 
             var result = new List<EnergyData2>();
