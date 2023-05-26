@@ -14,42 +14,10 @@
             <RadzenDataGridColumn TItem="EnergyData2" Property="RenewableShare" Title="Data" Width="120px" />
         </Columns>
     </RadzenDataGrid>
-    <br />
 
-<div class="rz-p-sm-12 rz-text-align-center">
-    <RadzenDropDown Data="@(Enum.GetValues(typeof(ColorType)).Cast<Enum>())" @bind-Value=@color
-                    AllowClear="true" AllowFiltering="true" Style="width: 100%; max-width: 400px;">
-    </RadzenDropDown>
-</div>
+    <RadzenDropDown Data=@dropdown TextProperty="Name" ValueProperty="Id" AllowClear=true Placeholder="Select location" @bind-Value="@value" />
+   
 
-@code {
-    ColorType? color;
-
-    public enum ColorType
-    {
-        Red,
-        Green,
-        Blue,
-        [Display(Description = "Almond Green")]
-        AlmondGreen,
-        [Display(Description = "Amber Gray")]
-        AmberGray,
-        [Display(Description = "Apple Blue... ")]
-        AppleBlueSeaGreen,
-        //[Display(Description = "Miss", ResourceType = typeof(ResourceFile)] localization example
-        [Display(Description = "Azure")]
-        AzureBlue
-    }
-}
-
-
-
-
-    <RadzenDropDown Data="@(Enum.GetValues(typeof(Appliance)).Cast<Enum>())" @bind-Value=@appliance
-                    AllowClear="true" AllowFiltering="true">
-    </RadzenDropDown>
-
-    
     <RadzenDataGrid PageSize="20" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true" AllowPaging="true" AllowSorting="true" Data="@weather" TItem="WeatherData2" ColumnWidth="800px">
         <Columns>
             <RadzenDataGridColumn TItem="WeatherData2" Property="time" Title="Timestamp" Width="70px" />
