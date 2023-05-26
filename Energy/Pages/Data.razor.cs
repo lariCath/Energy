@@ -30,8 +30,6 @@ public partial class Data
             new Dropdown(3, "E-Car"),
             new Dropdown(4, "Thermal Storage")
         };
-
-       
     }
 
     void OnChange(object value)
@@ -53,7 +51,7 @@ public partial class Data
 
         }
 
-        Console.WriteLine($"Value changed to {str}");
+        Console.WriteLine($"Value changed to");
     }
 
 
