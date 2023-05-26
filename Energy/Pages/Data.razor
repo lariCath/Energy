@@ -18,7 +18,6 @@
     <div class="rz-p-sm-12 rz-text-align-center">
         <RadzenDropDown Data="@(Enum.GetValues(typeof(Appliance)).Cast<Enum>())" @bind-Value=@appliance AllowClear=true Placeholder="Select appliance" Style="width: 100%; max-width: 400px;" />
     </div>
-}
     
     <RadzenDataGrid PageSize="20" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true" AllowPaging="true" AllowSorting="true" Data="@weather" TItem="WeatherData2" ColumnWidth="800px">
         <Columns>
@@ -26,4 +25,3 @@
             <RadzenDataGridColumn TItem="WeatherData2" Property="temperature" Title="Data" Width="120px" />
         </Columns>
     </RadzenDataGrid>
-}
