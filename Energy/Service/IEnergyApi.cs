@@ -7,7 +7,7 @@ public interface IEnergyApi
     Task<ApiResponse<EnergyData>> GetData(QueryParamsTotalPower param);
 
     [Get("/traffic_signal")]
-    Task<ApiResponse<EnergyData3>> GetTrafficSignal(string country);
+    Task<ApiResponse<List<EnergyData3>>> GetTrafficSignal(string country);
 
     [Get("/solar_share")]
     Task<ApiResponse<List<EnergyData3>>> GetSolarData(string country);

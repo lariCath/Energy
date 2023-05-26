@@ -10,6 +10,7 @@ public partial class Data
 
     private ShareData? shareData;
     private IEnumerable<EnergyData2>? data;
+    private IEnumerable<EnergyData2>? traffic;
     private IEnumerable<WeatherData2>? weather;
     List<Dropdown> dropdown;
 
@@ -20,7 +21,8 @@ public partial class Data
         data = await OverviewService!.GetDataAsync();
         weather = await OverviewService!.GetWeather();
         shareData = await OverviewService!.GetData2();
-        
+        traffic = await OverviewService!.GetTrafficLight();
+
         dropdown = new()
         {
             new Dropdown(1, "Household Appliance"),
@@ -53,7 +55,6 @@ public partial class Data
 
         Console.WriteLine($"Value changed to {str}");
     }
-
 
 
 
