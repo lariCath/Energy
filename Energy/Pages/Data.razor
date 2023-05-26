@@ -1,12 +1,13 @@
 ﻿@using Energy.Service;
 @using Radzen.Blazor;
+@using System.Collections
+@using System.ComponentModel.DataAnnotations
 
 @page "/data"
 
 <h3>Start saving!</h3>
 
-@if (data is not null)
-{
+
     <RadzenDataGrid PageSize="20" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true" AllowPaging="true" AllowSorting="true" Data="@data" TItem="EnergyData2" ColumnWidth="800px">
         <Columns>
             <RadzenDataGridColumn TItem="EnergyData2" Property="TimeStamp" Title="Timestamp" Width="70px" />
@@ -15,9 +16,39 @@
     </RadzenDataGrid>
     <br />
 
-    <div class="rz-p-sm-12 rz-text-align-center">
-        <RadzenDropDown Data="@(Enum.GetValues(typeof(Appliance)).Cast<Enum>())" @bind-Value=@appliance AllowClear=true Placeholder="Select appliance" Style="width: 100%; max-width: 400px;" />
-    </div>
+<div class="rz-p-sm-12 rz-text-align-center">
+    <RadzenDropDown Data="@(Enum.GetValues(typeof(ColorType)).Cast<Enum>())" @bind-Value=@color
+                    AllowClear="true" AllowFiltering="true" Style="width: 100%; max-width: 400px;">
+    </RadzenDropDown>
+</div>
+
+@code {
+    ColorType? color;
+
+    public enum ColorType
+    {
+        Red,
+        Green,
+        Blue,
+        [Display(Description = "Almond Green")]
+        AlmondGreen,
+        [Display(Description = "Amber Gray")]
+        AmberGray,
+        [Display(Description = "Apple Blue... ")]
+        AppleBlueSeaGreen,
+        //[Display(Description = "Miss", ResourceType = typeof(ResourceFile)] localization example
+        [Display(Description = "Azure")]
+        AzureBlue
+    }
+}
+
+
+
+
+    <RadzenDropDown Data="@(Enum.GetValues(typeof(Appliance)).Cast<Enum>())" @bind-Value=@appliance
+                    AllowClear="true" AllowFiltering="true">
+    </RadzenDropDown>
+
     
     <RadzenDataGrid PageSize="20" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true" AllowPaging="true" AllowSorting="true" Data="@weather" TItem="WeatherData2" ColumnWidth="800px">
         <Columns>
