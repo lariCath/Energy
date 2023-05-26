@@ -17,7 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddSingleton<OverviewService>();
 
     builder.Services.AddRefitClient<IAPI>()
-                          .ConfigureHttpClient(c => c.BaseAddress = new Uri(builder.Configuration.GetConnectionString("API") ?? ""));
+                          .ConfigureHttpClient(c => c.BaseAddress = new Uri(builder.Configuration.GetConnectionString("APIEnergyCharts") ?? ""));
 }
 var app = builder.Build();
 
