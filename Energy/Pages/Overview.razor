@@ -1,2 +1,16 @@
-﻿<h3>Overview</h3>
+﻿@using Energy.Service;
+@using Radzen.Blazor
 
+@page "/overview"
+
+<h3>Overview</h3>
+
+@if (data is not null)
+{
+    <RadzenDataGrid PageSize="20" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true" AllowPaging="true" AllowSorting="true" Data="@data" TItem="EnergyData2" ColumnWidth="400px">
+        <Columns>
+            <RadzenDataGridColumn TItem="EnergyData2" Property="TimeStamp" Title="Timestamp" Width="70px" />
+            <RadzenDataGridColumn TItem="EnergyData2" Property="RenewableShare" Title="Data" Width="120px" />
+        </Columns>
+    </RadzenDataGrid>
+}

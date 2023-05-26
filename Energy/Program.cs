@@ -1,17 +1,24 @@
 using Energy.Data;
 using Energy.Service;
 using Refit;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+{
+    builder.Host.UseSerilog((context, services, configuration) => configuration
+            .ReadFrom.Configuration(context.Configuration)
+            .ReadFrom.Services(services)
+            .Enrich.FromLogContext());
 
-// Add services to the container.
-builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
+    // Add services to the container.
+    builder.Services.AddRazorPages();
+    builder.Services.AddServerSideBlazor();
+    builder.Services.AddSingleton<WeatherForecastService>();
+    builder.Services.AddSingleton<OverviewService>();
 
-builder.Services.AddRefitClient<IAPI>()
-                      .ConfigureHttpClient(c => c.BaseAddress = new Uri(builder.Configuration.GetConnectionString("API") ?? ""));
-
+    builder.Services.AddRefitClient<IAPI>()
+                          .ConfigureHttpClient(c => c.BaseAddress = new Uri(builder.Configuration.GetConnectionString("API") ?? ""));
+}
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
