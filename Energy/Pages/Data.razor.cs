@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace Energy.Pages;
 
-public partial class Overview
+public partial class Data
 {
     [Inject] public OverviewService OverviewService { get; set; }
 
