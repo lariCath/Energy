@@ -1,8 +1,10 @@
-﻿namespace Energy.Service;
+﻿using Refit;
+
+namespace Energy.Service;
 
 public interface IWeatherApi
 {
-    //[Get("/total_power")]
-    //Task<ApiResponse<EnergyData>> GetData(QueryParams param);
+    [Get("/forecast")]
+    Task<ApiResponse<WeatherData>> GetData(QueryParamsWeather param);
 
 }
