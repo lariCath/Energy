@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energy", "Energy\Energy.csproj", "{5ED32243-CD0D-4982-A4AA-FD9E55ECD184}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energy", "Energy\Energy.csproj", "{5ED32243-CD0D-4982-A4AA-FD9E55ECD184}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

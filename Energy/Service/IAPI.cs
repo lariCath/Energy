@@ -1,32 +1,18 @@
 ﻿using Refit;
+using System.Text.Json.Serialization;
 
 namespace Energy.Service;
 public interface IAPI
 {
-    //[Get("/employees")]
-    //Task<ApiResponse<List<EmployeeAPIRaw>>> GetEmployees();
+    [Get("/total_power")]
+    Task<ApiResponse<Energy>> GetEmployees();
 
     //[Get("/employee/{id}")]
     //Task<ApiResponse<EmployeeAPIRaw>> GetEmployeeById(int id);
+}
 
-    //[Get("/department/employees")]
-    //Task<ApiResponse<List<DepartmentEmployeeAPI>>> GetEmployeesInDepartments();
-
-    //[Get("/department/employees/{id}")]
-    //Task<ApiResponse<List<DepartmentEmployeeAPI>>> GetEmployeesByDepartmentId(int id);
-
-    //[Get("/departments")]
-    //Task<ApiResponse<List<DepartmentAPI>>> GetDepartments();
-
-    //[Get("/department/managers")]
-    //Task<ApiResponse<List<DepartmentManagerAPI>>> GetDepartmentManagers();
-
-    //[Get("/department/{id}")]
-    //Task<ApiResponse<DepartmentAPI>> GetDepartmentById(int id);
-
-    //[Get("/departments")]
-    //Task<ApiResponse<List<DepartmentAPI>>> GetDepartmentByNr([Query("number")] int number);
-
-    //[Get("/department/managers/{id}")]
-    //Task<ApiResponse<List<DepartmentManagerAPI>>> GetDepartmentManagerById(int id);
+public class Energy
+{
+    [JsonPropertyName("Renewable share of load (%)")]
+    public List<double> RenewableShare { get; set; } = new List<double>();
 }
