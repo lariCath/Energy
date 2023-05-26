@@ -1,6 +1,6 @@
 using Energy.Data;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+using Energy.Service;
+using Refit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
+
+builder.Services.AddRefitClient<IAPI>()
+                      .ConfigureHttpClient(c => c.BaseAddress = new Uri(builder.Configuration.GetConnectionString("API") ?? ""));
 
 var app = builder.Build();
 
