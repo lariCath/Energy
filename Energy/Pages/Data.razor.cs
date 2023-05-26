@@ -1,8 +1,6 @@
 ﻿using Energy.Models;
 using Energy.Service;
 using Microsoft.AspNetCore.Components;
-using System.Collections;
-using System.ComponentModel.DataAnnotations;
 
 namespace Energy.Pages;
 
@@ -22,14 +20,41 @@ public partial class Data
         data = await OverviewService!.GetDataAsync();
         weather = await OverviewService!.GetWeather();
         shareData = await OverviewService!.GetData2();
+        
         dropdown = new()
         {
-            new Dropdown(1, "Household"),
-            new Dropdown(2, "Battery"),
+            new Dropdown(1, "Household Appliance"),
+            new Dropdown(2, "Battery Storage"),
             new Dropdown(3, "E-Car"),
-            new Dropdown(4, "Thermal")
+            new Dropdown(4, "Thermal Storage")
         };
+
+       
     }
+
+    void OnChange(object value)
+    {
+        if (value.Equals("Household Appliance"))
+        {
+
+        }
+        if (value.Equals("Battery Storage"))
+        {
+
+        }
+        if (value.Equals("E-Car"))
+        {
+
+        }
+        if (value.Equals("Thermal Storage"))
+        {
+
+        }
+
+        Console.WriteLine($"Value changed to {str}");
+    }
+
+
 
 
     public record Dropdown(int Id, string Name);
