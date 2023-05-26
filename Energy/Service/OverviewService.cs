@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using Energy.Models;
+using Serilog;
 
 namespace Energy.Service;
 
@@ -23,7 +24,7 @@ public class OverviewService
             var start = startTime.ToString("yyyy-MM-dd HH:mm");
             var end = endTime.ToString("yyyy-MM-dd HH:mm");
 
-            var queryparams = new QueryParamsEnergy("de", start, end);
+            var queryparams = new QueryParamsTotalPower("de", start, end);
             var rawData = await dataAPI.GetData(queryparams);
 
             var result = new List<EnergyData2>();
@@ -45,15 +46,51 @@ public class OverviewService
         }
     }
 
+    public async Task<ShareData?> GetData2()
+    {
+        try
+        {
+            var solar = await dataAPI.GetSolarData("de");
+            var windOn = await dataAPI.GetWindOnshoreData("de");
+            var windOff = await dataAPI.GetWindOffshoreData("de");
+
+            ShareData result = new()
+            {
+                SolarShare = GetEnergyData2(solar.Content),
+                WindOffshoreShare = GetEnergyData2(windOff.Content),
+                WindOnshoreShare = GetEnergyData2(windOn.Content)
+            };
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Something went wrong:");
+            return null;
+        }
+    }
+
+    public List<EnergyData2> GetEnergyData2(List<EnergyData3> rawdata)
+    {
+        var res = new List<EnergyData2>();
+
+        for(int i = 0; i< rawdata[0].Unixstamps.Count; i++)
+        {
+            var a = new EnergyData2(rawdata[0].Unixstamps[i], rawdata[1].Data[i]);
+            res.Add(a);
+        }
+
+        return res;
+    }
+
     public async Task<List<WeatherData2>?> GetWeather()
     {
         try
         {
-            DateTime time = new(2023, 05, 25, 17, 0, 0);
             double longitude = 12.10;
             double latitude = 49.01;
 
-            var start = "temperature_2m";           //time.ToString("yyyy-MM-ddTHH:mm");
+            var start = "temperature_2m";
 
             var queryparams = new QueryParamsWeather(latitude, longitude, start, 1);
             var rawData = await weatherApi.GetData(queryparams);

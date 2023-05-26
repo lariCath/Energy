@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.Design;
+﻿using Energy.Models;
+using System.ComponentModel.Design;
 using Energy.Service;
 using Microsoft.AspNetCore.Components;
 using System;
@@ -13,6 +14,8 @@ public partial class Data
 {
     [Inject] public OverviewService? OverviewService { get; set; }
 
+    private IEnumerable<EnergyData2> data;
+    private ShareData? shareData;
     private IEnumerable<EnergyData2>? data;
     private IEnumerable<WeatherData2>? weather;
     Hashtable selection = new Hashtable();
@@ -23,6 +26,7 @@ public partial class Data
     {
         data = await OverviewService!.GetDataAsync();
         weather = await OverviewService!.GetWeather();
+        shareData = await OverviewService!.GetData2();
     }
     public enum Appliance
     {
