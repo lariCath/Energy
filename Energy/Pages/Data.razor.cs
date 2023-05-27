@@ -43,8 +43,8 @@ public partial class Data
     {
         data = await OverviewService!.GetDataAsync();
         weather = await OverviewService!.GetWeather();
-        shareData = await OverviewService!.GetData2();
-        traffic = await OverviewService!.GetTrafficLight();
+        shareData = await OverviewService!.GetWindAndSolarData();
+        traffic = await OverviewService!.GetTrafficLightData();
 
 
 

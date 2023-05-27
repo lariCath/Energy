@@ -13,7 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
     // Add services to the container.
     builder.Services.AddRazorPages();
     builder.Services.AddServerSideBlazor();
-    builder.Services.AddSingleton<OverviewService>();
+    builder.Services.AddSingleton<ApiService>();
+    builder.Services.AddSingleton<OverviewHandler>();
+    builder.Services.AddSingleton<CalculationService>();
 
     builder.Services.AddRefitClient<IEnergyApi>()
                           .ConfigureHttpClient(c => c.BaseAddress = new Uri(builder.Configuration.GetConnectionString("APIEnergyCharts") ?? ""));

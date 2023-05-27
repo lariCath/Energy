@@ -3,15 +3,21 @@ using Serilog;
 
 namespace Energy.Service;
 
-public class OverviewService
+public class ApiService
 {
     private readonly IEnergyApi dataAPI;
     private readonly IWeatherApi weatherApi;
 
-    public OverviewService(IEnergyApi dataAPI, IWeatherApi weatherApi)
+    public ApiService(IEnergyApi dataAPI, IWeatherApi weatherApi)
     {
         this.dataAPI = dataAPI;
         this.weatherApi = weatherApi;
+    }
+
+    private DateTime UnixToDateTime(long unixTime)
+    {
+        DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(unixTime);
+        return dateTimeOffset.DateTime;
     }
 
     public async Task<List<EnergyData2>> GetDataAsync()
@@ -32,7 +38,8 @@ public class OverviewService
 
             for (int i = 0; i < lists!.TimeStamp.Count; i++)
             {
-                var d = new EnergyData2(lists.TimeStamp[i], lists.RenewableShare[i]);
+                var time = UnixToDateTime(lists.TimeStamp[i]);
+                var d = new EnergyData2(time, lists.RenewableShare[i]);
                 result.Add(d);
             }
 
@@ -46,7 +53,7 @@ public class OverviewService
         }
     }
 
-    public async Task<ShareData?> GetData2()
+    public async Task<ShareData?> GetWindAndSolarData()
     {
         try
         {
@@ -70,20 +77,22 @@ public class OverviewService
         }
     }
 
-    private static List<EnergyData2> GetEnergyData2(List<EnergyData3> rawdata)
+    private List<EnergyData2> GetEnergyData2(List<EnergyData3> rawdata)
     {
         var res = new List<EnergyData2>();
 
         for(int i = 0; i< rawdata[0].Unixstamps.Count; i++)
         {
-            var a = new EnergyData2(rawdata[0].Unixstamps[i], rawdata[1].Data[i]);
+            var time = UnixToDateTime(rawdata[0].Unixstamps[i]);
+
+            var a = new EnergyData2(time, rawdata[1].Data[i]);
             res.Add(a);
         }
 
         return res;
     }
 
-    public async Task<List<EnergyData2>?> GetTrafficLight()
+    public async Task<List<EnergyData2>?> GetTrafficLightData()
     {
         try
         {
@@ -93,7 +102,9 @@ public class OverviewService
 
             for (int i = 0; i < rawdata[0].Unixstamps.Count; i++)
             {
-                var a = new EnergyData2(rawdata[0].Unixstamps[i], rawdata[0].Data[i]);
+                var time = UnixToDateTime(rawdata[0].Unixstamps[i]);
+
+                var a = new EnergyData2(time, rawdata[0].Data[i]);
                 res.Add(a);
             }
 
