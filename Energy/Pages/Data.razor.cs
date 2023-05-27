@@ -12,9 +12,11 @@ namespace Energy.Pages;
 
 public partial class Data
 {
-    [Inject] public OverviewService? OverviewService { get; set; }
+    [Inject] public ApiService? OverviewService { get; set; }
+    [Inject] public CalculationService? CalService { get; set; }
     [Inject] public Radzen.DialogService? dialogService { get; set; }
 
+    private ResultObject result;
     private ShareData? shareData;
 
     private IEnumerable<EnergyData2>? data;
@@ -87,6 +89,7 @@ public partial class Data
             //Methode Wärme
         }
 
+        result = CalService!.Do();
 
         /*Console.WriteLine(househould);
         Console.WriteLine(battery);
@@ -95,19 +98,19 @@ public partial class Data
     }
 
     public class Appliance
-{
-    public Dropdown? DropDown
     {
-        get; set;
+        public Dropdown? DropDown
+        {
+            get; set;
+
+        }
+        public DateTime Time
+        {
+            get; set;
+        }
 
     }
-    public DateTime Time
-    {
-        get; set;
-    }
-
-}
-public record Dropdown(int Id, string Name);
+    public record Dropdown(int Id, string Name);
 
 
 }

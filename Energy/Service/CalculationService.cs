@@ -2,50 +2,7 @@
 
 public class CalculationService
 {
-    public List<EnergyData2> GetCarData(List<EnergyData2> values1, List<DateTime[]> timeframesCar)
-    {
-        return CarFunc(timeframesCar, values1);
-    }
-
-    public Data2 GetDeviceData(List<EnergyData2> values1, List<DateTime[]> timeframesCar, int duration)
-    {
-        DevicesFunc(timeframesCar, values1, duration, out double maxScore, out int bestTime);
-
-        return new Data2(bestTime, maxScore);
-    }
-
-    public Data3 GetHeaterData(int heatinDuaration, List<double> values1, List<double> meanTemp)
-    {
-        WaermeFunc(heatinDuaration, values1, meanTemp, out List<double> waermeMaxValues, out List<int> waermeMaxHours);
-
-        return new Data3(waermeMaxHours, waermeMaxValues);
-    }
-
-    public Data4 GetBatteryData(List<double> windShare, List<double> solarShare)
-    {
-        BatteryFunc(solarShare, windShare, out List<double> windValues, out List<double> windHours);
-
-        return new Data4(windHours, windValues);
-    }
-
-    private List<EnergyData2> CarFunc(List<DateTime[]> timeframes, List<EnergyData2> hourlyValues)
-    {
-        var orderedData = hourlyValues.Where(h => TimeInTimeframes(h.Time, timeframes)).OrderByDescending(v => v.RenewableShare).ToList();
-
-        return orderedData;
-    }
-
-    private bool TimeInTimeframes(DateTime time, List<DateTime[]> frames)
-    {
-        foreach (var frame in frames)
-        {
-            if (frame[0] < time && time < frame[1]) return true;
-        }
-
-        return false;
-    }
-
-    private List<double> MeanPerHour(List<double> values)
+    public static List<double> MeanPerHour(List<double> values)
     {
         List<double> hourlyValues = new List<double>();
 
@@ -58,8 +15,8 @@ public class CalculationService
 
         return hourlyValues;
     }
+    public static void NMaxElements(List<double> list1, List<int> list3, int N, out List<double> finalList, out List<int> indexList)
 
-    private void NMaxElements(List<double> list1, List<int> list3, int N, out List<double> finalList, out List<int> indexList)
     {
         finalList = new List<double>();
         List<double> tempList = new List<double>(list1);
@@ -86,9 +43,11 @@ public class CalculationService
             tempList2.Remove(max1);
             finalList.Add(max1);
         }
+
+
     }
 
-    private void WaermeFunc(int T_waerme, List<double> hourlyValues, List<double> temp, out List<double> maxValues, out List<int> maxHours)
+    public static void WaermeFunc(int T_waerme, List<double> hourlyValues, List<double> temp, out List<double> maxValues, out List<int> maxHours)
     {
         int count = hourlyValues.Count(x => x > 60);
         maxValues = new List<double>();
@@ -115,9 +74,11 @@ public class CalculationService
             NMaxElements(hourlyValues, hourSet, T_waerme, out maxValues, out maxHours);
 
         }
+
+
     }
 
-    private void BatteryFunc(List<double> solarShare, List<double> windShare, out List<double> windValues, out List<double> windHours)
+    public static void BatteryFunc(List<double> solarShare, List<double> windShare, out List<double> windValues, out List<double> windHours)
     {
         int count = solarShare.Count(x => x > 30);
         int count2 = windShare.Count(x => x > 30);
@@ -150,29 +111,38 @@ public class CalculationService
         }
     }
 
-    private void DevicesFunc(List<DateTime[]> timeframes, List<EnergyData2> hourlyValues, int duration, out double maxScore, out int bestTime)
+
+    public static void CarFunc(int T_car, List<int[]> timeframes, List<double> hourlyValues, out List<double> maxValues, out List<double> maxHours)
+    {
+        List<double> relValues = new List<double>();
+        List<double> relHours = new List<double>();
+
+        foreach (var el in timeframes)
+        {
+            for (int i = el[0]; i < el[1]; i++)
+            {
+                relValues.Add(hourlyValues[i]);
+                relHours.Add(i);
+            }
+        }
+
+        maxValues = relValues.OrderByDescending(v => v).Take(T_car).ToList();
+        maxHours = relHours.OrderByDescending(v => v).Take(T_car).ToList(); // FEHLER!!!!! stattdessen Index der max werte finden und in relHours zugehörige Werte entnehmen
+    }
+
+    public static void DevicesFunc(int T_geraete, List<int[]> timeframes, List<double> hourlyValues, out double maxScore, out int bestTime)
     {
         List<double> scoreList = new List<double>();
         List<int> startTimes = new List<int>();
-        List<int> times = new();
 
-        foreach(var time in timeframes)
+        foreach (var el in timeframes)
         {
-            times.AddRange(time.Select(t => t.Hour));
-        }
-
-        times = times.Distinct().ToList();
-
-        var possible = hourlyValues.Where(h => TimeInTimeframes(h.Time, timeframes)).ToList();
-
-        foreach (var el in times)
-        {
-            for (int i = el[0]; i < el[1] - (duration - 1); i++)
+            for (int i = el[0]; i < el[1] - (T_geraete - 1); i++)
             {
                 double score = 0;
                 startTimes.Add(i);
 
-                for (int j = 0; j < duration; j++)
+                for (int j = 0; j < T_geraete; j++)
                 {
                     score += hourlyValues[i + j];
                 }
@@ -180,7 +150,7 @@ public class CalculationService
                 scoreList.Add(score);
             }
         }
-
+        //Console.WriteLine(string.Join(", ",scoreList.ToArray()));
         double maxScoreValue = scoreList.Max();
         int index1 = scoreList.IndexOf(maxScoreValue);
         int bestStartTime = startTimes[index1];
@@ -188,53 +158,69 @@ public class CalculationService
         maxScore = maxScoreValue;
         bestTime = bestStartTime;
     }
+
+    public ResultObject Do()
+    {
+        ResultObject result = new ResultObject();
+
+        List<double> hourlyValues = new List<double> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 82.0, 88.3, 92.4, 94.3, 93.2, 89.5, 82.9, 69.8, 54.4, 42.3, 38.1, 39.4, 42.4, 99.8 };
+        //List<double> hourlyValues = new List<double> {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22.0, 18.3,12.4,14.3, 13.2, 19.5, 12.9, 19.8, 14.4, 12.3, 18.1, 39.4, 12.4, 99.8};
+        //List<double> hourlyValues = MeanPerHour(values);
+        //Console.WriteLine("Stundenmittelwerte: " + string.Join(", ", hourlyValues));
+
+        int T_waerme = 5;
+        List<double> temp = new List<double> { 13, 18 };
+        List<double> waermeMaxValues;
+        List<int> waermeMaxHours;
+        WaermeFunc(T_waerme, hourlyValues, temp, out waermeMaxValues, out waermeMaxHours);
+
+        result.WaremeResult = new Data3(waermeMaxHours, waermeMaxValues);
+
+        //Console.WriteLine("Wärme: " + string.Join(", ", waermeMaxValues.ToArray()));
+        //Console.WriteLine("Wärme Stunden: " + string.Join(", ", waermeMaxHours.ToArray()));
+
+        List<double> solarShare = new List<double> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20.0, 10.3, 10.4, 14.3, 13.2, 10.5, 10.9, 10.8, 14.4, 12.3, 18.1, 39.4, 12.4, 43.8 };
+        List<double> windShare = new List<double> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20.0, 30.3, 40.4, 94.3, 93.2, 50.5, 40.9, 30.8, 54.4, 42.3, 38.1, 39.4, 42.4, 43.8 };
+
+        List<double> windValues, windHours;
+        BatteryFunc(solarShare, windShare, out windValues, out windHours);
+        result.WindSolarResult = new Data4(windHours, windValues);
+        //Console.WriteLine("Battery: " + string.Join(", ", windValues.ToArray()));
+        //Console.WriteLine("Battery Hours: " + string.Join(", ", windHours.ToArray()));
+
+        int T_car = 4;
+        List<int[]> timeframes = new List<int[]> { new int[] { 12, 17 }, new int[] { 18, 20 } };
+
+        List<double> carMaxValues, carMaxHours;
+        CarFunc(T_car, timeframes, hourlyValues, out carMaxValues, out carMaxHours);
+        result.CarResult = new Data4(carMaxHours, carMaxValues);
+
+        //Console.WriteLine("E-Auto: " + string.Join(", ", carMaxValues.ToArray()));
+        //Console.WriteLine("E-Auto Stunden: " + string.Join(", ", carMaxHours.ToArray()));
+
+        int T_geraete = 2;
+        List<int[]> timeframes2 = new List<int[]> { new int[] { 12, 17 }, new int[] { 18, 20 } };
+        double maxScore;
+        int bestTime;
+        DevicesFunc(T_geraete, timeframes2, hourlyValues, out maxScore, out bestTime);
+        result.DeviceResult = new Data2(bestTime, maxScore);
+        //Console.WriteLine("Geräte: " + maxScore + bestTime);
+
+        return result;
+    }
 }
 
+
+public class ResultObject
+{
+    public Data2 DeviceResult { get; set; }
+    public Data4 CarResult { get; set; }
+    public Data4 WindSolarResult { get; set; }
+    public Data3 WaremeResult { get; set; }
+
+}
 
 public record Data1(double relValue, double relHour);
 public record Data2(int time, double value);
 public record Data3(List<int> hours, List<double> values);
 public record Data4(List<double> hours, List<double> values);
-
-#region refcode
-//public static void Do(List<double> values1, List<double> meanTemp, List<double> windShare, List<double> solarShare, List<int[]> timeframesCar, List<int[]> timeframesOtherDevice)
-//{
-//    //api viertelstündlich -> jeder vierte wert
-//    //List<double> hourlyValues = new List<double> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 82.0, 88.3, 92.4, 94.3, 93.2, 89.5, 82.9, 69.8, 54.4, 42.3, 38.1, 39.4, 42.4, 99.8 };
-//    //List<double> hourlyValues = new List<double> {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22.0, 18.3,12.4,14.3, 13.2, 19.5, 12.9, 19.8, 14.4, 12.3, 18.1, 39.4, 12.4, 99.8};
-//    //List<double> hourlyValues = MeanPerHour(values);
-//    //Console.WriteLine("Stundenmittelwerte: " + string.Join(", ", hourlyValues));
-
-//    int T_waerme = 5;   //wärmeadedauer
-//                        //List<double> temp = new List<double> { 13, 18 };    //vorrausage durchschnittstemp nchste 2 tage
-//    List<double> waermeMaxValues;
-//    List<int> waermeMaxHours;
-//    WaermeFunc(T_waerme, values1, meanTemp, out waermeMaxValues, out waermeMaxHours);
-//    //Console.WriteLine("Wärme: " + string.Join(", ", waermeMaxValues.ToArray()));
-//    //Console.WriteLine("Wärme Stunden: " + string.Join(", ", waermeMaxHours.ToArray()));
-
-//    //List<double> solarShare = new List<double> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20.0, 10.3, 10.4, 14.3, 13.2, 10.5, 10.9, 10.8, 14.4, 12.3, 18.1, 39.4, 12.4, 43.8 };
-//    //List<double> windShare = new List<double> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20.0, 30.3, 40.4, 94.3, 93.2, 50.5, 40.9, 30.8, 54.4, 42.3, 38.1, 39.4, 42.4, 43.8 };
-
-//    List<double> windValues, windHours;
-//    BatteryFunc(solarShare, windShare, out windValues, out windHours);
-
-//    //Console.WriteLine("Battery: " + string.Join(", ", windValues.ToArray()));
-//    //Console.WriteLine("Battery Hours: " + string.Join(", ", windHours.ToArray()));
-
-//    int T_car = 4;  //Ladeddauer Auto
-//                    //List<int[]> timeframes = new List<int[]> { new int[] { 12, 17 }, new int[] { 18, 20 } };        //wann verfügabr von user
-
-//    List<Data1> carMaxValues;
-//    CarFunc(T_car, timeframesCar, values1, out carMaxValues);
-//    //Console.WriteLine("E-Auto: " + string.Join(", ", carMaxValues.Select(c => c.relValue).ToArray()));
-//    //Console.WriteLine("E-Auto Stunden: " + string.Join(", ", carMaxValues.Select(c => c.relHour).ToArray()));
-
-//    int T_geraete = 2;  //ladedauer des geräts
-//                        //List<int[]> timeframes2 = new List<int[]> { new int[] { 12, 17 }, new int[] { 18, 20 } };   //zeitslot
-//    double maxScore;
-//    int bestTime;
-//    DevicesFunc(T_geraete, timeframesOtherDevice, values1, out maxScore, out bestTime);
-//    //Console.WriteLine("Geräte: " + maxScore + bestTime);
-//}
-#endregion

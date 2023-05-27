@@ -11,17 +11,17 @@ public class OverviewHandler
         this.calculationService = calculationService;
     }
 
-    public async Task<List<EnergyData2>> GetBestTimeCar(List<DateTime[]> timeframes)
-    {
-        var trafficData = await apiService.GetTrafficLightData();
+    //public async Task<List<EnergyData2>> GetBestTimeCar(List<DateTime[]> timeframes)
+    //{
+    //    var trafficData = await apiService.GetTrafficLightData();
 
-        return calculationService.GetCarData(trafficData, timeframes);
-    }
+    //    return calculationService.GetCarData(trafficData, timeframes);
+    //}
 
-    public async Task GetBestTimeDevice(List<DateTime> timeframes)
-    {
-        var trafficData = await apiService.GetTrafficLightData();
+    //public async Task GetBestTimeDevice(List<DateTime> timeframes)
+    //{
+    //    var trafficData = await apiService.GetTrafficLightData();
 
-        return calculationService.GetDeviceData(trafficData, timeframes);
-    }
+    //    return calculationService.GetDeviceData(trafficData, timeframes);
+    //}
 }
