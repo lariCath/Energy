@@ -56,18 +56,18 @@
 <br />
 <br />
 
-<RadzenDataGrid PageSize="20" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true" AllowPaging="true" AllowSorting="true" Data="@result" TItem="EnergyData2" ColumnWidth="800px">
-	<Columns>
-		<RadzenDataGridColumn TItem="EnergyData2" Property="TimeStamp" Title="Timestamp" Width="70px" />
-		<RadzenDataGridColumn TItem="EnergyData2" Property="RenewableShare" Title="Data" Width="120px" />
-	</Columns>
-</RadzenDataGrid>
+@if(result is not null)
+{
+	<ul>
+		<li>Best hours to carge car:</li>
+	@foreach (double number in result.CarResult.hours)
+	{
+		<li>@number</li>
+	}
+</ul>
+}
+
+
 
 <br/>
 
-<RadzenDataGrid-- PageSize="20" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true" AllowPaging="true" AllowSorting="true" Data="@weather" TItem="WeatherData2" ColumnWidth="800px">
-	<Columns>
-		<RadzenDataGridColumn TItem="WeatherData2" Property="time" Title="Timestamp" Width="70px" />
-		<RadzenDataGridColumn TItem="WeatherData2" Property="temperature" Title="Data" Width="120px" />
-	</Columns>
-</RadzenDataGrid-->
