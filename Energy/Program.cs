@@ -1,6 +1,7 @@
 using Energy.Service;
 using Refit;
 using Serilog;
+using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -19,6 +20,8 @@ var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddRefitClient<IWeatherApi>()
                           .ConfigureHttpClient(c => c.BaseAddress = new Uri(builder.Configuration.GetConnectionString("APIWeatherForecast") ?? ""));
+
+    builder.Services.AddScoped<DialogService>();
 }
 var app = builder.Build();
 

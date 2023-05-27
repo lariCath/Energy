@@ -3,35 +3,71 @@
 @using System.Collections
 @using System.ComponentModel.DataAnnotations
 
+@inject DialogService DialogService
+
+
 @page "/data"
 
 <h3>Start saving!</h3>
 
 
-    <RadzenDataGrid PageSize="20" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true"  AllowPaging="true" AllowSorting="true" Data="@data" TItem="EnergyData2" ColumnWidth="800px">
-        <Columns>
-            <RadzenDataGridColumn TItem="EnergyData2" Property="TimeStamp" Title="Timestamp" Width="70px" />
-            <RadzenDataGridColumn TItem="EnergyData2" Property="RenewableShare" Title="Data" Width="120px" />
-        </Columns>
-    </RadzenDataGrid>
+<RadzenPanel AllowCollapse="true" Class="rz-my-10 rz-mx-auto" Style="width: 900px;">
+	<HeaderTemplate>
+		
+	</HeaderTemplate>
+	<ChildContent>
+		<RadzenText TextStyle="TextStyle.Body1">
+			<strong>How to</strong> 1. Select your appliance 2. Pick your earliest and latest possible time
+		</RadzenText>
+	</ChildContent>
 
-    <br/>
+</RadzenPanel>
+<RadzenDataGrid @ref="applianceGrid" PageSize="20" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true" AllowPaging="true" AllowSorting="true" TItem="Appliance" ColumnWidth="800px">
+	<Columns>
+		<RadzenDropDown Title="Select Appliance" @bind-Value=@househould Data=@dropdown TextProperty="Name" ValueProperty="Id" AllowClear=true Placeholder="Select Appliance" />
+		<RadzenDatePicker Title="Earliest Start Time" @bind-Value=@timeHousehouldStart ShowTime="true" TimeOnly="true" DateFormat="HH:mm" />
+		<RadzenDatePicker Title="Latest Start Time" @bind-Value=@timeHousehouldEnd ShowTime="true" TimeOnly="true" DateFormat="HH:mm" />
+	</Columns>
+</RadzenDataGrid>
+<RadzenDataGrid @ref="applianceGrid" PageSize="20" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true" AllowPaging="true" AllowSorting="true" TItem="Appliance" ColumnWidth="800px">
+	<Columns>
+		<RadzenDropDown Title="Select Appliance" @bind-Value=@battery Data=@dropdown TextProperty="Name" ValueProperty="Id" AllowClear=true Placeholder="Select Appliance" />
+		<RadzenDatePicker Title="Earliest Start Time" @bind-Value=@timeBatteryStart ShowTime="true" TimeOnly="true" DateFormat="HH:mm" />
+		<RadzenDatePicker Title="Latest Start Time" @bind-Value=@timeBatteryEnd ShowTime="true" TimeOnly="true" DateFormat="HH:mm" />
+	</Columns>
+</RadzenDataGrid>
+<RadzenDataGrid @ref="applianceGrid" PageSize="20" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true" AllowPaging="true" AllowSorting="true" TItem="Appliance" ColumnWidth="800px">
+	<Columns>
+		<RadzenDropDown @bind-Value=@car Data=@dropdown TextProperty="Name" ValueProperty="Id" AllowClear=true Placeholder="Select Appliance" />
+		<RadzenDatePicker @bind-Value=@timeCarStart ShowTime="true" TimeOnly="true" DateFormat="HH:mm" />
+		<RadzenDatePicker @bind-Value=@timeCarEnd ShowTime="true" TimeOnly="true" DateFormat="HH:mm" />
+	</Columns>
+</RadzenDataGrid>
+<RadzenDataGrid @ref="applianceGrid" PageSize="20" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true" AllowPaging="true" AllowSorting="true" TItem="Appliance" ColumnWidth="800px">
+	<Columns>
+		<RadzenDropDown @bind-Value=@thermalStorage Data=@dropdown TextProperty="Name" ValueProperty="Id" AllowClear=true Placeholder="Select Appliance" />
+		<RadzenDatePicker @bind-Value=@timeThermalStart ShowTime="true" TimeOnly="true" DateFormat="HH:mm" />
+		<RadzenDatePicker @bind-Value=@timeThermalEnd ShowTime="true" TimeOnly="true" DateFormat="HH:mm" />
+	</Columns>
+</RadzenDataGrid>
+<br />
+<RadzenButton Click=@(args => OnClick("Primary button", args)) Text="Submit" />
+<RadzenDialog />
+<br />
+<br />
 
-<RadzenDropDown Data=@dropdown TextProperty="Name" ValueProperty="Id" Change="@OnChange" AllowClear=true Placeholder="Select location" @bind-Value="@value" />
-   
-    <br/>
-<RadzenDataGrid PageSize="20" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true" AllowPaging="true" AllowSorting="true" Data="@dropdown" TItem="EnergyData2" ColumnWidth="800px">
-    <Columns>
-        <RadzenDataGridColumn TItem="EnergyData2" Property="TimeStamp" Title="Timestamp" Width="70px" />
-        <!--RadzenDataGridColumn TItem="EnergyData2" Property="RenewableShare" Title="Data" Width="120px" --/>
-    </Columns>
+<RadzenDataGrid PageSize="20" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true" AllowPaging="true" AllowSorting="true" Data="@data" TItem="EnergyData2" ColumnWidth="800px">
+	<Columns>
+		<RadzenDataGridColumn TItem="EnergyData2" Property="TimeStamp" Title="Timestamp" Width="70px" />
+		<RadzenDataGridColumn TItem="EnergyData2" Property="RenewableShare" Title="Data" Width="120px" />
+	</Columns>
 </RadzenDataGrid>
 
-    <br/>
+<br/>
 
-    <RadzenDataGrid PageSize="20" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true" AllowPaging="true" AllowSorting="true" Data="@weather" TItem="WeatherData2" ColumnWidth="800px">
-        <Columns>
-            <RadzenDataGridColumn TItem="WeatherData2" Property="time" Title="Timestamp" Width="70px" />
-            <RadzenDataGridColumn TItem="WeatherData2" Property="temperature" Title="Data" Width="120px" />
-        </Columns>
-    </RadzenDataGrid>
+<RadzenDataGrid PageSize="20" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true" AllowPaging="true" AllowSorting="true" Data="@weather" TItem="WeatherData2" ColumnWidth="800px">
+	<Columns>
+		<RadzenDataGridColumn TItem="WeatherData2" Property="time" Title="Timestamp" Width="70px" />
+		<RadzenDataGridColumn TItem="WeatherData2" Property="temperature" Title="Data" Width="120px" />
+	</Columns>
+</RadzenDataGrid>
